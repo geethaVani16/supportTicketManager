@@ -1,3 +1,4 @@
+const axios = require("axios")
 
 const User = require('../models/User')
 
@@ -51,13 +52,19 @@ module.exports.logout = (req, res) => {
 }
 
 module.exports.AllUserlist = (req, res) => {
-    User.find()
-    .then((list) => {
-        res.send(list)
+    axios.get("https://desk.zoho.in/api/v1/tickets", {
+        headers: {
+            orgId: "60001280952",
+            Authorization: "aa8cd2f4d25aa3418e47f953ad9fe323"
+        }
     })
-    .catch((err) => {
-        res.send(err)
-    })
+        .then((a) => {
+            console.log(a.data)
+            res.send(a.data)
+        })
+        .catch(() => {
+            res.send("err")
+        })
 }
 
 
