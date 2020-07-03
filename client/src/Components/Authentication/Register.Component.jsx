@@ -1,6 +1,7 @@
 import React from 'react'
 import { Form, Button } from 'react-bootstrap'
 import './Register.css'
+import axios from 'axios'
 
 
 class Register extends React.Component {
@@ -10,8 +11,11 @@ class Register extends React.Component {
             username: '',
             email: '',
             password: '',
+            notice:""
         }
         this.handleChange = this.handleChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
+
     }
     handleChange(e) {
         //console.log(prop,e.target.name ,'in Register')
@@ -22,19 +26,46 @@ class Register extends React.Component {
         }))
     }
 
+    handleSubmit(e) {
+        e.preventDefault()
+        const formData = {
+            username: this.state.username,
+            email: this.state.email,
+            password: this.state.password
+        }
+        axios.post("http://localhost:4000/users/register", formData)
+            .then((res) => {
+                if(res.status===200) {
+                    this.setState(() => ({
+                        username: '', email: '', password: '',
+                        //once if we are loged in. we have to make input feilds empty and redirect user to login screen
+                        notice: "successfully registered,taking you to login screen"
+                    }))
+    
+                    setTimeout(() => {
+                        this.props.history.push('/users/login')
+                    }, 2000)
+                }
+            
+            })
+            .catch(err => console.log(err))
+    }
+
+
     render() {
         return (
             <div className="RegisterContainer">
-                <Form >
+                {this.state.notice }
+                <Form  onSubmit={this.handleSubmit}>
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>User Name</Form.Label>
                         <Form.Control
-                            type="email"
+                            type="text"
                             placeholder="Enter Name"
                             value={this.state.username}
                             onChange={this.handleChange}
-                            name='username' 
-                            
+                            name='username'
+
                         />
                     </Form.Group>
                     <Form.Group controlId="formBasicEmail">

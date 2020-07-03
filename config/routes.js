@@ -8,6 +8,7 @@ const {authenticateUser}=require('../app/middlewares/authentication')
 router.post('/users/register',userController.register)
 router.post('/users/login',userController.login)
 router.get('/users/all',userController.AllUserlist)
+router.post('/addticket',userController.test)
 
 
 
